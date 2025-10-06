@@ -1,0 +1,22 @@
+name: Publish Release
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Set up Go
+          uses: actions/setup-go@v4
+          with:
+            go-version: '1.25'
+
+        - name: Test
+          run: go test -v ./...
+
+        - name: Ping the golang proxy
+          run: curl -X GET "https://proxy.golang.org/github.com/harryrose/size/@v/${{ github.ref_name }}.info"
